@@ -101,7 +101,10 @@ def bcubes(wordlist, gold='cogid', test='lexstatid', modify_ref=False, pprint=Tr
     
     def get_scores(one, other):
         for _, line in wordlist.get_etymdict(ref=one, modify_ref=modify_ref).items():
-            line = [value for value in [evl(x[0]) for x in line if x != 0]]
+            line = [value
+                    for value in [evl(x[0] if x else '')
+                                  for x in line
+                                  if x != 0]]
             # check for linesize
             if len(line) > 1:
                 # get cognate-ids in the other set for the line
