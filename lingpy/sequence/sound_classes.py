@@ -1387,11 +1387,10 @@ def sampa2uni(seq):
 
     result = ''
     tokens = reXS.findall(seq)
-    for tok, err in tokens:
-        try:
-            assert not err and tokens
-        except AssertionError:
-            raise AssertionError('{0} + {1}'.format(err, tok))
+    for i, (tok, err) in enumerate(tokens):
+        if err:
+            raise ValueError("Error {:} for token {:}, index {:}, in sequence {:}".format(
+                err, tok, i, seq))
         result += xs[tok]
 
     return result
