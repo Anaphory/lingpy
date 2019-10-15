@@ -474,17 +474,18 @@ class Wordlist(QLCParserWithRowsAndCols):
             # check if data is not a list or tuple, if this is the case,
             # make it a fake-list, so we can treat it just as all the other
             # instances of fuzzy cognates (output is the same, though)
-            if isinstance(cogids, (str, int, float)):
-                cogids = [cogids]
-            for cog in cogids:
-                cogid = f(cog)
-                # we initialize with zero here, since this corresponds to a
-                # missing entry in our data
-                if cogid not in etym_dict:
-                    etym_dict[cogid] = [0 for i in range(self.width)]
-                # assign new values for the current session
-                new_value = etym_dict[cogid][colIdx] or []
-                etym_dict[cogid][colIdx] = new_value + [key]
+            try:
+                cogids = [f(cog) for cog in cogids]
+            except TypeError:
+                cogids = [f(cogids)]
+
+            for cogid in cogids:
+                # Create the etymological dictionary entry, if
+                # necessary, and add the form to its list for the
+                # specified column.
+                etym_dict.setdefault(
+                    cogid, [[] for i in range(self.width)])[colIdx].append(key)
+
         if entry:
             # create the output
             _etym_dict = {}
@@ -494,10 +495,7 @@ class Wordlist(QLCParserWithRowsAndCols):
             for key, values in etym_dict.items():
                 _etym_dict[key] = []
                 for value in values:
-                    if value != 0:
-                        _etym_dict[key].append([self[v][idx] for v in value])
-                    else:
-                        _etym_dict[key].append(0)
+                    _etym_dict[key].append([self[v][idx] for v in value])
             return _etym_dict
         return etym_dict
 
