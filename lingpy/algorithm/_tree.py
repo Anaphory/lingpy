@@ -34,6 +34,9 @@ class _TreeDist(object):
         ntreeBtree = Tree(treeB + ';')
         lang_settreeB = set(ntreeBtree.taxa)
 
+        if treeA == treeB:
+            return 0.0
+
         # check for identical number of taxa
         if len(lang_settreeA) != len(lang_settreeB):
             raise ValueError(
