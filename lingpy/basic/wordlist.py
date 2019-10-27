@@ -1098,7 +1098,11 @@ class Wordlist(QLCParserWithRowsAndCols):
           The list of columns to import. (default: all columns)
 
         filter: function: rowdict → bool
-          A condition function for importing only some rows. (default: lambda row: row["form"])
+          A condition function for importing only some rows. (default: lambda
+          row: row["form"]) – This function gets every row passed as
+          dictionary. In-place modifications to the dictionary can be used to
+          modify the data for the Wordlist object, including column renaming
+          etc.
 
         All other parameters are passed on to the `cls`
 
@@ -1164,7 +1168,6 @@ class Wordlist(QLCParserWithRowsAndCols):
             except KeyError:
                 c_id = "ID"
                 concepts = bounce_as_id
-
 
             # create dictionary
             D = {0: columns} # Reserve the header
